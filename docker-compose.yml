@@ -22,9 +22,9 @@ services:
   backend:
     restart: always
     container_name: code
-    command : bash -c "python check_db.py --service-name db --ip db --port 3306 && 
-                      python manage.py migrate &&
-                      python manage.py runserver 0.0.0.0:8000"
+    command : bash -c "python manage.py migrate &&
+                       python manage.py runserver 0.0.0.0:8000" 
+                      
 
     build:
       context: ./Backend/rantman/.

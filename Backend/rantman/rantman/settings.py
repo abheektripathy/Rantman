@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+
+from logging import config
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -82,8 +84,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DBPASS'),
+        
         'HOST': 'db', # You are supposed to use service name not localhost
         'PORT': '3306',
     }
