@@ -82,6 +82,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DBPASS'),
+        'HOST': 'db', # You are supposed to use service name not localhost
+        'PORT': '3306',
     }
 }
 

@@ -1,0 +1,57 @@
+version: "3.2"
+services:
+ 
+
+  db:
+    restart: always
+    platform: linux/x86_64
+    image: mariadb:5.5
+    environment:
+      - MYSQL_HOST=localhost
+      - MYSQL_PORT=3306
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_DATABASE=bug
+      - MYSQL_USER=<<username>>
+      - MYSQL_PASSWORD=<<password>>
+      - MYSQL_ROOT_PASSWORD=<<rootpassword>>
+    ports:
+      - "3302:3306"
+    networks:
+      - db-net
+
+  backend:
+    restart: always
+    container_name: code
+    command : bash -c "python check_db.py --service-name db --ip db --port 3306 && 
+                      python manage.py migrate &&
+                      python manage.py runserver 0.0.0.0:8000"
+
+    build:
+      context: ./Backend/rantman/.
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      
+    networks:
+      - db-net
+
+  frontend:
+    restart: always
+    command : npm start
+    container_name: front
+    build:
+      context: ./frontend/.
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    depends_on:
+      - backend
+    networks:
+      - db-net
+
+networks:
+  db-net:
+    driver: bridge
