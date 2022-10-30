@@ -6,7 +6,7 @@ import { ColorModeSwitcher } from "./ColorModeSwitcher"
 import Header from "./components/Header"
 import NotesListPage from "./pages/NotesListPage"
 import { promises } from "fs"
-import NotePage from "./components/NotePage"
+import NotePage from "./pages/NotePage"
 
 
 export const App = () => {
@@ -18,9 +18,15 @@ export const App = () => {
 
   return(  
   <Router> 
+    <div className="container dark">
+      <div className="app">
     <Header></Header>
     <Route path='/' exact component = {NotesListPage}></Route>
     <Route path='/note/:id' component = {NotePage}></Route>
+    </div>
+    </div>
+  
+    
   </Router>
   )
 
