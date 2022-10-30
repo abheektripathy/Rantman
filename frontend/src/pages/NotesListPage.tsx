@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import ListItem from '../components/ListItem'
 
 const NotesListPage = () => {
 
-    const [notes, setNotes] = useState([])
+  //ts ke saath <any[]> use kario usestatae mein
+  //pretty neat sys here - get notes fetches from port 8000 jahan django ka backend hai and fir woh setnotes data set kardeta 
+  //aur map ke through print hojata here
+    const [notes, setNotes] = useState<any[]>([])
 
     useEffect(()=> {
       getNotes()
@@ -24,7 +28,7 @@ const NotesListPage = () => {
     <div>
         <div className='notes-list'></div>
         {notes.map((note,index)=>(
-            <h3></h3>
+         <ListItem note={note} key= {index}></ListItem>
          
         ))}
       
