@@ -20,8 +20,9 @@ export const App = () => {
   <Router> 
     <div className="container dark">
       <div className="app">
-    <Header></Header>
-    <Route path='/' exact component = {NotesListPage}></Route>
+       
+   
+    <Route path='/note' exact component = {NotesListPage}></Route>
     <Route path='/note/:id' component = {NotePage}></Route>
     </div>
     </div>
