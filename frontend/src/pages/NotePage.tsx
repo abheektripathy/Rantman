@@ -23,9 +23,11 @@ const NotePage = ({match}) => {
     }
 
   return (
-    <div>
-      <p>{ // @ts-ignore
-      note?.body}</p>
+    <div className='note'>
+      <div className='note-header'></div>
+      <textarea defaultValue={// @ts-ignore 
+      note?.body}>
+      </textarea>
     </div>
   )
 }
