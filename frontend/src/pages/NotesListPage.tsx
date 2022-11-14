@@ -14,7 +14,7 @@ const NotesListPage = () => {
     },[])
   
     let getNotes = async() => {
-      let response = await fetch('http://127.0.0.1:8000/api/notes')
+      let response = await fetch('/api/notes')
       //taaku usko fetch karne ka time de tabhi await use kiya 
       let data = await response.json()
       setNotes(data)
