@@ -1,5 +1,6 @@
 # Rantman
 apple notes for ranting, but no one knows about its existence.
+p.s how about integrating a twitterbot with it?
 
 ## Installation
 
