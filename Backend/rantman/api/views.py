@@ -3,8 +3,9 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .serializers import NoteSerializer
+from .serializers import NoteSerializer, SyedSerializer
 from .models import Note
+from .models import Syed
 
 # basically maine seedha s=json response le sakta tha but the restframeowrk module gives ui tto it.
 @api_view(['GET'])
@@ -70,3 +71,13 @@ def updateNote(request, pk):
         serializer.save()
 
     return Response(serializer.data) 
+
+
+@api_view(['GET'])
+def getSyed(request):
+    syed = Syed.objects.get
+    serializer = SyedSerializer(syed, many = True)
+    return Response(serializer.data)
+
+
+    
