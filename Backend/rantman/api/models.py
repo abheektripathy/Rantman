@@ -8,7 +8,7 @@ class Note(models.Model):
     created = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):
-        return self.body[0:50]
+        return self.body
 
 class Syed(models.Model):
     name = models.TextField(null = True,blank = True)
@@ -18,4 +18,4 @@ class Syed(models.Model):
     def __str__(self):
         return self.name
 
-        
+

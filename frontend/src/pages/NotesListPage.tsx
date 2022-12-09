@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import ListItem from '../components/ListItem'
 
@@ -7,17 +8,31 @@ const NotesListPage = () => {
   //pretty neat sys here - get notes fetches from port 8000 jahan django ka backend hai and fir woh setnotes data set kardeta 
   //aur map ke through print hojata here
     const [notes, setNotes] = useState<any[]>([])
+    const [syed, setSyed] = useState<any[]>([])
+    
+
+    let getSyed = async() => {
+      let response = await fetch('/api/syed')
+      //taaku usko fetch karne ka time de tabhi await use kiya 
+      let data = await response.json()
+      setSyed(data)
+    }
 
     useEffect(()=> {
       getNotes()
+      getSyed()
   
     },[])
+
+    
   
     let getNotes = async() => {
       let response = await fetch('/api/notes')
       //taaku usko fetch karne ka time de tabhi await use kiya 
       let data = await response.json()
       setNotes(data)
+
+   
       
     
   
@@ -37,8 +52,11 @@ const NotesListPage = () => {
                 ))}
             </div>
             
+            
         </div>
   )
 }
 
 export default NotesListPage
+
+
