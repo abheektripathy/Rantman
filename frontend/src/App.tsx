@@ -9,6 +9,7 @@ import { promises } from "fs"
 import NotePage from "./pages/NotePage"
 import { MantineProvider } from "@mantine/core"
 import { LoginForm } from "./components/Login"
+import  Github from "./components/Github"
 
 
 export const App = () => {
@@ -28,6 +29,7 @@ export const App = () => {
     <Route path='/note' exact component = {NotesListPage}></Route>
     <Route path='/note/:id' component = {NotePage}></Route>
     <Route path= '/auth/login' component={LoginForm}></Route>
+    <Route path= '/github' component = {Github}></Route>
     </div>
     </div>
   
