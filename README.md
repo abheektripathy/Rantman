@@ -49,13 +49,3 @@ Here are a few ideas for marketing and pitching your project:
 
 
 
-## Installation
-
-```
-cd Rantman
-
-docker-compose build
-docker-compose up -d
-
-```
-
