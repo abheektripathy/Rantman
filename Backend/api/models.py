@@ -10,12 +10,6 @@ class Note(models.Model):
     def __str__(self):
         return self.body
 
-class Syed(models.Model):
-    name = models.TextField(null = True,blank = True)
-    age = models.IntegerField()
-    height = models.IntegerField()
 
-    def __str__(self):
-        return self.name
 
 

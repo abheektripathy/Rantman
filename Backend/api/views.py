@@ -73,11 +73,7 @@ def updateNote(request, pk):
     return Response(serializer.data) 
 
 
-@api_view(['GET'])
-def getSyed(request):
-    syed = Syed.objects.all()
-    serializer = SyedSerializer(syed, many = True)
-    return Response(serializer.data)
+
 
 
     

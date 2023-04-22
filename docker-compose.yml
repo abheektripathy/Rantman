@@ -1,34 +1,14 @@
 version: "3.2"
 services:
- 
-
-  
-
   backend:
     restart: always
     container_name: code
-    command : bash -c "python manage.py migrate &&
-                       python manage.py runserver 0.0.0.0:8000" 
-                      
-
+    command: bash -c "python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000"
     build:
-      context: ./Backend/rantman/.
+      context: ./Backend/
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
 
-  # frontend:
-  #   restart: always
-  #   command : npm start
-  #   container_name: front
-  #   build:
-  #     context: ./frontend/.
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   stdin_open: true
-  #   depends_on:
-  #     - backend
-  #   networks:
-  #     - db-net
 
