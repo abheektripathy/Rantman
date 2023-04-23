@@ -18,7 +18,7 @@ function SwapForm() {
     };
 
     try {
-      const response = await fetch(`http://0.0.0.0:8000/api/mock/create/`, {
+      const response = await fetch(`http://0.0.0.0:8000/api/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

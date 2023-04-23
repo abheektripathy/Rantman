@@ -3,9 +3,9 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .serializers import NoteSerializer, SyedSerializer
+from .serializers import NoteSerializer
 from .models import Note
-from .models import Syed
+
 
 # basically maine seedha s=json response le sakta tha but the restframeowrk module gives ui tto it.
 @api_view(['GET'])
@@ -55,6 +55,16 @@ def getNotes(request):
 
 # Create your views here.
 
+@api_view(['POST'])
+def createNote(request):
+    data = request.data
+    note = Note.objects.create(
+        body = data['body']
+    )
+
+    serializer = NoteSerializer(note, many = False)
+    return Response(serializer.data)
+
 @api_view(['GET'])
 def getNote(request, pk):
     notes = Note.objects.get(id = pk)
@@ -71,6 +81,12 @@ def updateNote(request, pk):
         serializer.save()
 
     return Response(serializer.data) 
+
+@api_view(['DELETE'])
+def deleteNote(request, pk):
+    note = Note.objects.get(id=pk)
+    note.delete()
+    return Response('Note was deleted!')
 
 
 

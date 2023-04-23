@@ -1,10 +1,16 @@
+import Head from "next/head";
 import Link from "next/link";
 
 export default function NotesPage() {
-
   const id = 1;
   return (
     <>
+      <Head>
+        <title>Rantman</title>
+        <meta name="description" content="an obfuscated notes app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <h1
         className="text-white text-4xl md:text-4xl lg:text-5xl font-bold font-poppins md:text-left text-center  px-9 pt-16"
         style={{
@@ -15,7 +21,7 @@ export default function NotesPage() {
           WebkitTextFillColor: "transparent",
         }}
       >
-        `/api/notes`
+        `/api/notes/all`
       </h1>
       <section className="bg-inherit text-white -mt-4">
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:py-12 sm:px-6 lg:py-16 lg:px-8">

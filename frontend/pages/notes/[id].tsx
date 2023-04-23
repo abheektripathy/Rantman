@@ -1,9 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
+
 //@ts-nocheck
 
 import React, { useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 
 export default function Note() {
   const id = 1;
@@ -51,6 +53,12 @@ export default function Note() {
 
   return (
     <>
+        <Head>
+        <title>Rantman</title>
+        <meta name="description" content="an obfuscated notes app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <section className="relative flex flex-wrap lg:h-screen lg:items-center">
         <div className="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-6/12 lg:px-16 lg:py-24">
           <h1
