@@ -1,73 +1,84 @@
 /* eslint-disable @next/next/no-img-element */
-
-//@ts-nocheck
-
-import React, { useState } from "react";
-import Link from "next/link";
-import dynamic from "next/dynamic";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 
 export default function Note() {
-  const id = 1;
-  const [mockLocation, setMockLocation] = useState<string>("");
-  const [mockJSON, setMockJSON] = useState<object | null>(null);
-  const [responseData, setResponseData] = useState<object | null>(null);
+  const { enqueueSnackbar } = useSnackbar();
+  const [noteBody, setnoteBody] = useState<string | null>(null);
+  const [responseData, setResponseData] = useState<String | null>(null);
+  const router = useRouter();
+  const { id } = router.query;
 
-
-  async function getMockData(noteId: number): Promise<object | null> {
+  async function getNoteData(): Promise<String | null> {
     try {
-      const response = await fetch(
-        `http://0.0.0.0:8000/api/notes/${noteId}`
-      );
-      const data = await response.json(); // set the response data in state
-      return data;
+      const response = await fetch(`http://0.0.0.0:8000/api/notes/${id}`);
+      const data = await response.json();
+      setResponseData(data.body); // set the response data in state
+      return data.body;
     } catch (error) {
       console.error("Error:", error);
       return null;
     }
   }
 
-  async function postMockData(
-    mockJSON: object,
-    mockLocation: string
-  ): Promise<void> {
+  async function putData(noteBody: string | null): Promise<void> {
     const data = {
-      mockJSON: mockJSON,
-      mockLocation: mockLocation,
+      body: noteBody,
     };
-
-    try {
-      const response = await fetch(`http://0.0.0.0:8000/api/mock/create/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const responseData = await response.json();
-      setResponseData(responseData); // set the response data in state
-    } catch (error) {
-      console.error("Error:", error);
+    if (noteBody) {
+      try {
+        const response = await fetch(
+          `http://0.0.0.0:8000/api/notes/${id}/update`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        );
+        const responseData = await response.json();
+        setResponseData(responseData);
+        enqueueSnackbar("Note Updated", { variant: "success" });
+        return responseData;
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    } else {
+      enqueueSnackbar("Body Empty", { variant: "error" });
     }
   }
 
-  async function getMockData(mockLocation: string): Promise<object | null> {
+  async function deleteNote() {
     try {
       const response = await fetch(
-        `http://0.0.0.0:8000/api/mock/${mockLocation}`
+        `http://0.0.0.0:8000/api/notes/${id}/delete/`,
+        { method: "DELETE" }
       );
       const data = await response.json();
-      setResponseData(data); // set the response data in state
-      return data;
+      enqueueSnackbar(data.toString(), { variant: "success" });
     } catch (error) {
       console.error("Error:", error);
+      enqueueSnackbar("Failed", { variant: "error" });
       return null;
     }
   }
+
+  useEffect(() => {
+    async function fetchNoteData() {
+      const data = await getNoteData();
+      if (data)
+        //@ts-ignore
+        setnoteBody(data);
+    }
+    fetchNoteData();
+  }, [id]);
 
   return (
     <>
-        <Head>
+      <Head>
         <title>Rantman</title>
         <meta name="description" content="an obfuscated notes app" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -85,17 +96,18 @@ export default function Note() {
               WebkitTextFillColor: "transparent",
             }}
           >
-            `{`{id}`}`
+            {id}
           </h1>
 
           <div>
             <div className="relative pt-2">
               <input
-                className="w-full h-72 p-4 pr-12 pt-4 text-sm border-gray-700 bg-[#111111] rounded-lg shadow-sm resize-none placeholder-gray-400"
+                className="w-full h-72 p-4 pr-12 pt-4 text-sm border-gray-700 bg-[#111111] rounded-lg shadow-sm resize-none placeholder-gray-400 text-white"
                 placeholder=""
                 type="text"
-                onChange={(event) => setMockJSON(event.target.value)}
-                value={mockJSON}
+                onChange={(event) => setnoteBody(event.target.value)}
+                //@ts-ignore
+                value={noteBody}
               />
 
               <span className="absolute inset-y-0 right-0 grid px-4 place-content-center"></span>
@@ -103,36 +115,26 @@ export default function Note() {
           </div>
 
           <div className="flex items-center justify-between mt-12">
-            {/* {responseData ? (
-              <div>
-                <p>Response Data:</p>
-                <pre className="text-gray-700">
-                  {JSON.stringify(responseData, null, 2)}
-                </pre>
-              </div>
-            ) : (
-              <p className="text-gray-700 ml-2">Try out :p</p>
-            )} */}
-
             <span className="space-x-3  ">
               {" "}
               <button
                 onClick={async () => {
-                  const data = await postMockData(mockJSON, mockLocation);
+                  const data = await putData(noteBody);
                   console.log(data);
                 }}
                 className="inline-block rounded-lg bg-[#233471] px-5 py-3 text-sm font-medium text-white"
               >
-                DELETE
+                UPDATE
               </button>
               <button
                 onClick={async () => {
-                  const data = await getMockData(mockLocation);
+                  const data = await deleteNote();
                   console.log(data);
+                  router.push("/notes");
                 }}
                 className="inline-block rounded-lg bg-[#2d4391] px-5 py-3 text-sm font-medium text-white"
               >
-                <Link href="/notes">UPDATE</Link>
+                DELETE
               </button>
             </span>
 
