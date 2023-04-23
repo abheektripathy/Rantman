@@ -2,13 +2,25 @@ version: "3.2"
 services:
   backend:
     restart: always
-    container_name: code
-    command: bash -c "python manage.py migrate &&
-      python manage.py runserver 0.0.0.0:8000"
+    command: gunicorn rantman.wsgi --bind 0.0.0.0:8000
     build:
       context: ./Backend/
       dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgres://postgres:12345678@postgres_db:5432/rantman
     ports:
       - "8000:8000"
 
+  postgres_db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: '12345678'
+      POSTGRES_DB: rantman
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
+volumes:
+  postgres_data:

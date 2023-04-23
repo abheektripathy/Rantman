@@ -1,7 +1,24 @@
-FROM python:3
-ENV PYTHONUNBUFFERED 1
-WORKDIR /app/api
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
-COPY . ./
+FROM python:3.9.9-buster
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends apt-utils libsasl2-dev libssl-dev \
+ libfuzzy-dev net-tools python3-psycopg2 git osslsigncode apache2-utils \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --upgrade pip
+
+COPY requirements.txt /app/requirements.txt
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir --compile -r requirements.txt
+
+COPY ./ /app/
+
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 EXPOSE 8000
+
+ENTRYPOINT ["/app/entrypoint.sh"]

@@ -58,12 +58,15 @@ def getNotes(request):
 @api_view(['POST'])
 def createNote(request):
     data = request.data
+    if 'body' not in data:
+        return Response({'error': 'Missing required field: body'})
     note = Note.objects.create(
-        body = data['body']
+        body=data['body']
     )
 
-    serializer = NoteSerializer(note, many = False)
+    serializer = NoteSerializer(note, many=False)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getNote(request, pk):
