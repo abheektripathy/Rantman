@@ -1,48 +1,38 @@
 /* eslint-disable @next/next/no-img-element */
-//@ts-nocheck
 import React, { useState } from "react";
-import Link from 'next/link';
+import Link from "next/link";
+import { useSnackbar } from "notistack";
 
 function SwapForm() {
-  const [mockLocation, setMockLocation] = useState<string>("");
-  const [mockJSON, setMockJSON] = useState<object | null>(null);
-  const [responseData, setResponseData] = useState<object | null>(null);
+  const { enqueueSnackbar } = useSnackbar();
+  const [noteTitle, setnoteTitle] = useState<string>("");
+  const [noteBody, setnoteBody] = useState<string | null>(null);
 
-  async function postMockData(
-    mockJSON: object,
-    mockLocation: string
+  async function postData(
+    noteBody: string | null,
+    noteTitle: string | null
   ): Promise<void> {
     const data = {
-      mockJSON: mockJSON,
-      mockLocation: mockLocation,
+      body: noteBody,
+      title: noteTitle,
     };
-
-    try {
-      const response = await fetch(`http://0.0.0.0:8000/api/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const responseData = await response.json();
-      setResponseData(responseData); // set the response data in state
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  }
-
-  async function getMockData(mockLocation: string): Promise<object | null> {
-    try {
-      const response = await fetch(
-        `http://0.0.0.0:8000/api/mock/${mockLocation}`
-      );
-      const data = await response.json();
-      setResponseData(data); // set the response data in state
-      return data;
-    } catch (error) {
-      console.error("Error:", error);
-      return null;
+    //yahan check daaliyo ki notebody empty toh nahi,
+    if (noteBody) {
+      try {
+        const response = await fetch(`http://0.0.0.0:8000/api/notes/create/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        const responseData = await response.json();
+        enqueueSnackbar("Note Created", { variant: "success" }); // set the response data in state
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    } else {
+      enqueueSnackbar("Body Empty", { variant: "error" });
     }
   }
 
@@ -76,8 +66,8 @@ function SwapForm() {
                 className="w-full p-4 pr-12 text-sm border-white rounded-lg shadow-sm mb-4 bg-[#111111] placeholder-gray-400"
                 placeholder="/CREATE?{title}"
                 type="text"
-                onChange={(event) => setMockLocation(event.target.value)}
-                value={mockLocation}
+                onChange={(event) => setnoteTitle(event.target.value)}
+                value={noteTitle}
               />
 
               <span className="absolute inset-y-0 right-0 grid px-4 place-content-center mb-4">
@@ -104,8 +94,9 @@ function SwapForm() {
                 className="w-full h-32 p-4 pr-12 text-sm border-gray-700 bg-[#111111] rounded-lg shadow-sm resize-none placeholder-gray-400"
                 placeholder="/RANT=?{arrghhhh}"
                 type="text"
-                onChange={(event) => setMockJSON(event.target.value)}
-                value={mockJSON}
+                onChange={(event) => setnoteBody(event.target.value)}
+                //@ts-ignore
+                value={noteBody}
               />
 
               <span className="absolute inset-y-0 right-0 grid px-4 place-content-center">
@@ -128,41 +119,26 @@ function SwapForm() {
           </div>
 
           <div className="flex items-center justify-between mt-10">
-            {responseData ? (
-              <div>
-                <p>Response Data:</p>
-                <pre className="text-gray-700">
-                  {JSON.stringify(responseData, null, 2)}
-                </pre>
-              </div>
-            ) : (
-              <p className="text-gray-700 ml-2">Try out :p</p>
-            )}
+            <p className="text-gray-700 ml-2">Try out :p</p>
 
             <span className="space-x-3">
               {" "}
               <button
                 onClick={async () => {
-                  const data = await postMockData(mockJSON, mockLocation);
+                  const data = await postData(noteBody, noteTitle);
                   console.log(data);
                 }}
                 className="inline-block rounded-lg bg-[#233471] px-5 py-3 text-sm font-medium text-white"
               >
                 CREATE
               </button>
-              <button
-                onClick={async () => {
-                  const data = await getMockData(mockLocation);
-                  console.log(data);
-                }}
-                className="inline-block rounded-lg bg-[#2d4391] px-5 py-3 text-sm font-medium text-white"
-              >
-               <Link href="/notes">VIEW</Link>
+              <button className="inline-block rounded-lg bg-[#2d4391] px-5 py-3 text-sm font-medium text-white">
+                <Link href="/notes">VIEW</Link>
               </button>
             </span>
           </div>
         </div>
-        <div className="lg:w-1/12"/>
+        <div className="lg:w-1/12" />
 
         <div className="relative w-full h-64 sm:h-96 lg:h-full lg:w-5/12">
           <img
