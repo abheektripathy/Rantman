@@ -63,7 +63,7 @@ function SwapForm() {
           <div>
             <div className="relative">
               <input
-                className="w-full p-4 pr-12 text-sm border-white rounded-lg shadow-sm mb-4 bg-[#111111] placeholder-gray-400"
+                className="w-full p-4 pr-12 text-sm border-white rounded-lg shadow-sm mb-4 bg-[#111111] placeholder-gray-400 text-white"
                 placeholder="/CREATE?{title}"
                 type="text"
                 onChange={(event) => setnoteTitle(event.target.value)}
@@ -90,8 +90,8 @@ function SwapForm() {
           </div>
           <div>
             <div className="relative">
-              <input
-                className="w-full h-32 p-4 pr-12 text-sm border-gray-700 bg-[#111111] rounded-lg shadow-sm resize-none placeholder-gray-400"
+              <textarea
+                className="w-full h-32 p-4 pr-12 text-sm border-gray-700 bg-[#111111] rounded-lg shadow-sm resize-none placeholder-gray-400 text-white"
                 placeholder="/RANT=?{arrghhhh}"
                 type="text"
                 onChange={(event) => setnoteBody(event.target.value)}

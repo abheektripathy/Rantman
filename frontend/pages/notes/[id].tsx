@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
+import Link from "next/link";
 
 export default function Note() {
   const { enqueueSnackbar } = useSnackbar();
@@ -101,7 +103,7 @@ export default function Note() {
 
           <div>
             <div className="relative pt-2">
-              <input
+              <textarea
                 className="w-full h-72 p-4 pr-12 pt-4 text-sm border-gray-700 bg-[#111111] rounded-lg shadow-sm resize-none placeholder-gray-400 text-white"
                 placeholder=""
                 type="text"
@@ -138,9 +140,9 @@ export default function Note() {
               </button>
             </span>
 
-            <a className="text-white text-xl" href="/">
+            <Link className="text-white text-xl" href="/">
               /
-            </a>
+            </Link>
           </div>
         </div>
         <div className="lg:w-1/12" />

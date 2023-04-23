@@ -80,7 +80,8 @@ export default function NotesPage() {
                     </h2>
 
                     <p className="mt-1 text-sm text-gray-300 text-left">
-                      {note.body}
+                      {note.body.split(" ").slice(0, 20).join(" ")}
+                      {note.body.split(" ").length > 20 ? "..." : ""}
                     </p>
                   </Link>
                 </button>
