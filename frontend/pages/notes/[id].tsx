@@ -13,6 +13,20 @@ export default function Note() {
   const [mockJSON, setMockJSON] = useState<object | null>(null);
   const [responseData, setResponseData] = useState<object | null>(null);
 
+
+  async function getMockData(noteId: number): Promise<object | null> {
+    try {
+      const response = await fetch(
+        `http://0.0.0.0:8000/api/notes/${noteId}`
+      );
+      const data = await response.json(); // set the response data in state
+      return data;
+    } catch (error) {
+      console.error("Error:", error);
+      return null;
+    }
+  }
+
   async function postMockData(
     mockJSON: object,
     mockLocation: string
