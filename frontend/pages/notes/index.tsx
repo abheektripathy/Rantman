@@ -34,7 +34,7 @@ export default function NotesPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1
-        className="text-white text-4xl md:text-4xl lg:text-5xl font-bold font-poppins md:text-left text-center  px-9 pt-16"
+        className="text-white text-4xl md:text-4xl lg:text-5xl font-bold font-poppins md:text-left text-center px-9 pt-16"
         style={{
           background:
             "linear-gradient(to right,rgba(135, 206, 235, 1), rgba(1, 0, 70, 1))",
@@ -43,7 +43,7 @@ export default function NotesPage() {
           WebkitTextFillColor: "transparent",
         }}
       >
-        `/api/notes/all`
+        /api/notes/all
       </h1>
       <section className="bg-inherit text-white -mt-4">
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:py-12 sm:px-6 lg:py-16 lg:px-8">
