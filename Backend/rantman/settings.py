@@ -76,7 +76,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rantman.wsgi.application'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0', ]
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
