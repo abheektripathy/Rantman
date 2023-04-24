@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 export default function NotesPage() {
   const [mockData, setMockData] = useState<any[]>([]);
+  const [error404, setError404] = useState<boolean>(false)
 
   async function getMockData(): Promise<[]> {
     try {
@@ -13,6 +14,7 @@ export default function NotesPage() {
       return data;
     } catch (error) {
       console.error("Error:", error);
+      setError404(true)
       return [];
     }
   }
@@ -45,7 +47,7 @@ export default function NotesPage() {
       >
         /api/notes/all
       </h1>
-      {mockData ? (
+      {!error404 ? (
         <section className="bg-inherit text-white -mt-4">
           <div className="mx-auto max-w-screen-xl px-4 py-8 sm:py-12 sm:px-6 lg:py-16 lg:px-8">
             <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -105,7 +107,7 @@ export default function NotesPage() {
             </p>
 
             <p className="mt-4 text-gray-500 dark:text-gray-400">
-              try creating some notes? :p
+              try creating some notes?
             </p>
           </div>
         </div>
