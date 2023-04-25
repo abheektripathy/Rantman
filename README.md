@@ -1,5 +1,8 @@
 # Rantman
 notes app, but very scalable.
+<img width="1209" alt="Screenshot 2023-04-26 at 12 13 05 AM" src="https://user-images.githubusercontent.com/90976669/234372290-68f3da46-abbe-4611-9e40-311069a9c08b.png">
+
+
 
 ### Architecture Overview
 
@@ -13,6 +16,8 @@ Rantman is built using a microservices architecture, with each component of the 
 ### Installation and Deployment
 
 To install and deploy Rantman, you will need to follow these steps:
+
+
 
 1. Clone the Rantman repository from GitHub:
 
