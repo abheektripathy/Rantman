@@ -53,6 +53,8 @@ docker-compose up
 
 This will start the app in development mode.
 
+p.s the vercel deployment currently just shows the start page, just for the sake of a college project, this was meant to be run locally.
+
 
 
 
