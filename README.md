@@ -6,12 +6,15 @@ notes app, but very scalable.
 
 ### Architecture Overview
 
-Rantman is built using a microservices architecture, with each component of the app running in its own Docker container. The architecture consists of the following components:
+Rantman consists of several components bundled together with docker-compose. The frontend is built with Next.js and sends HTTP requests to the Nginx load balancer. The load balancer is configured to use the least_conn algorithm to route requests to one of the three backend replicas of the Django application.
 
-- **Frontend:** The frontend of the app is built using Next.js, a React framework for building server-side rendered web applications. The frontend is served by Nginx, which acts as a reverse proxy and load balancer. Nginx is responsible for distributing incoming requests across multiple instances of the frontend containers, ensuring that the load is balanced evenly across them.
-- **Backend:** The backend of the app is built using Django, a Python web framework. The backend is served by Gunicorn, a Python WSGI HTTP Server, and communicates with the frontend via a RESTful API. The backend containers are managed by Kubernetes, which ensures that the backend containers are always available and responsive.
-- **Database:** The database for the app is built using Postgres, a powerful open-source relational database management system. The database container is also managed by Kubernetes, ensuring that the database is always available and responsive.
-- **Container Orchestration:** The containers for the app are managed and orchestrated by Kubernetes, a popular open-source container orchestration platform. Kubernetes is responsible for deploying, scaling, and managing the Docker containers for the app, ensuring that the containers are running smoothly and efficiently.
+The Django application is served through Gunicorn, which handles memory balancing through its workers for better thread management. The backend communicates with a Postgres database to store and retrieve data.
+
+All the components of the app are containerized and orchestrated through Docker Compose, which enables easy management and deployment of the app. The app uses a custom load balancer configuration through Nginx to handle incoming requests and distribute the load evenly among the backend replicas.
+
+The use of containerization technology allows for better scalability and portability of the app. The app can be easily deployed to different environments, and the infrastructure can be easily replicated and scaled up or down as needed.
+
+Overall, the app architecture is designed to provide high availability, scalability, and fault tolerance, ensuring that the app can handle a high volume of requests without downtime or performance issues.
 
 <img width="742" alt="Screenshot 2023-04-26 at 1 07 17 PM" src="https://user-images.githubusercontent.com/90976669/234503772-01a5a5dd-f208-4082-978a-237fd940a8dd.png">
 
