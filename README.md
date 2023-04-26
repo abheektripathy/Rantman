@@ -13,10 +13,14 @@ Rantman is built using a microservices architecture, with each component of the 
 - **Database:** The database for the app is built using Postgres, a powerful open-source relational database management system. The database container is also managed by Kubernetes, ensuring that the database is always available and responsive.
 - **Container Orchestration:** The containers for the app are managed and orchestrated by Kubernetes, a popular open-source container orchestration platform. Kubernetes is responsible for deploying, scaling, and managing the Docker containers for the app, ensuring that the containers are running smoothly and efficiently.
 
+<img width="742" alt="Screenshot 2023-04-26 at 1 07 17 PM" src="https://user-images.githubusercontent.com/90976669/234503772-01a5a5dd-f208-4082-978a-237fd940a8dd.png">
+
+
+
+
 ### Installation and Deployment
 
 To install and deploy Rantman, you will need to follow these steps:
-
 
 
 1. Clone the Rantman repository from GitHub:
@@ -38,14 +42,8 @@ docker-compose build
 docker-compose up
 ```
 
-This will start the app in development mode. To start the app in production mode, you will need to modify the Docker Compose file and add your production configuration.
+This will start the app in development mode.
 
-1. Deploy the app to Kubernetes by following the instructions in the `kubernetes` directory of the Rantman repository. This will deploy the app to your Kubernetes cluster, making it available for use by your users.
-
-### Conclusion
-
-a template project configred with a custom load balacer wriiten in nginx and a microservices architecture using docker compose and container orchastrcation using k8’s.
-also guicorn which helps in thread management.
 
 Here are a few ideas for marketing and pitching your project:
 
