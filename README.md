@@ -1,5 +1,8 @@
 # Rantman
-notes app, but very scalable.
+
+An over-engineered notes app, with a scalable infra.
+</br>
+</br>
 <img width="1209" alt="Screenshot 2023-04-26 at 12 13 05 AM" src="https://user-images.githubusercontent.com/90976669/234372290-68f3da46-abbe-4611-9e40-311069a9c08b.png">
 
 
@@ -16,9 +19,12 @@ The use of containerization technology allows for better scalability and portabi
 
 Overall, the app architecture is designed to provide high availability, scalability, and fault tolerance, ensuring that the app can handle a high volume of requests without downtime or performance issues.
 
+</br>
+</br>
+
 <img width="742" alt="Screenshot 2023-04-26 at 1 07 17 PM" src="https://user-images.githubusercontent.com/90976669/234503772-01a5a5dd-f208-4082-978a-237fd940a8dd.png">
 
-
+</br>
 
 
 ### Installation and Deployment
