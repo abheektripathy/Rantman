@@ -54,10 +54,5 @@ docker-compose up
 This will start the app in development mode.
 
 
-Here are a few ideas for marketing and pitching your project:
-
-1. Emphasize the scalability and flexibility of the architecture: With the use of Docker containers, Docker Compose, and Kubernetes orchestration, your notes app can be scaled easily and flexibly to handle increased traffic and usage. This means that your app can handle growth without compromising performance or stability.
-2. Highlight the use of modern technologies: Using modern technologies like Docker
-
 
 
