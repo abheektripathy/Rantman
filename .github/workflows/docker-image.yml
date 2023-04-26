@@ -13,4 +13,23 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker-compose build 
+      run: docker-compose build
+
+    - name: Push the Docker image to Docker Hub
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: your-dockerhub-username/your-dockerhub-repo-name:latest
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    - name: Update README with Docker image link
+      run: |
+        echo "Latest Docker image: your-dockerhub-username/your-dockerhub-repo-name:latest" >> README.md
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "Update README with latest Docker image" -a
+        git push
+
