@@ -18,20 +18,22 @@ jobs:
       - name: Get access token
         id: access_token
         run: |
-          ACCESS_TOKEN=$(curl --silent --request POST \
-            --header "Content-Type: application/x-www-form-urlencoded" \
-            --data-urlencode "grant_type=client_credentials" \
-            --data-urlencode "client_id=${{ secrets.LINKEDIN_CLIENT_ID }}" \
-            --data-urlencode "client_secret=${{ secrets.LINKEDIN_CLIENT_SECRET }}" \
-            https://www.linkedin.com/oauth/v2/accessToken | jq -r '.access_token')
-          echo "::set-output name=access_token::$ACCESS_TOKEN"
+         response=$(curl --request POST --url 'https://www.linkedin.com/oauth/v2/accessToken' \
+          --header 'Content-Type: application/x-www-form-urlencoded' \
+          --data-urlencode 'grant_type=client_credentials' \
+          --data-urlencode "client_id=$CLIENT_ID" \
+          --data-urlencode "client_secret=$CLIENT_SECRET")
+          export ACCESS_TOKEN=$(echo $response | jq -r '.access_token')
+        env:
+          ACCESS_TOKEN: ${{ env.ACCESS_TOKEN }}
+
 
       - name: Post to LinkedIn
         run: |
           CHANGELOG_URL="https://github.com/intelowlproject/IntelOwl/blob/develop/.github/CHANGELOG.md"
           MESSAGE="published #IntelOwl ${{github.ref}}!\nfull changelog here: ${CHANGELOG_URL}\n#ThreatIntelligence #CyberSecurity #OpenSource #osint #dfir Certego"
 
-          curl --silent --request POST \
+          curl --request POST \
             --header "Authorization: Bearer ${{ steps.access_token.outputs.access_token }}" \
             --header "X-Restli-Protocol-Version: 2.0.0" \
             --header "Content-Type: application/json" \
