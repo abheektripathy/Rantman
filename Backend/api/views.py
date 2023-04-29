@@ -54,7 +54,6 @@ def getNotes(request):
     return Response(serializer.data)
 
 # Create your views here.
-
 @api_view(['POST'])
 def createNote(request):
     data = request.data
@@ -90,6 +89,13 @@ def deleteNote(request, pk):
     note = Note.objects.get(id=pk)
     note.delete()
     return Response('Note was deleted!')
+
+@api_view(['GET'])
+def searchNotes(request):
+    query = request.GET.get('query', '')
+    notes = Note.objects.filter(body__icontains=query)
+    serializer = NoteSerializer(notes, many=True)
+    return Response(serializer.data)
 
 
 
