@@ -1,4 +1,4 @@
-name: Post to LinkedIn
+name: publish-to-LinkedIn
 
 on:
   push:
@@ -51,9 +51,7 @@ jobs:
         env:
           ACCESS_TOKEN: ${{ steps.get_access_token.outputs.access_token }}
         run: |
-          release_version=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
-          changelog_url="https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_SHA/.github/CHANGELOG.md#$release_version"
-          message="published #$release_version!\nfull changelog: $changelog_url\n#ThreatIntelligence #CyberSecurity #OpenSource #osint #dfir Certego"
+          message="published #IntelOwl ${{github.ref_name}}!\nfull changelog: https://github.com/intelowlproject/IntelOwl/releases/tag/${{github.ref_name}} \n#ThreatIntelligence #CyberSecurity #OpenSource #osint #dfir Certego"
 
           response=$(curl -i --request POST --url 'https://api.linkedin.com/v2/ugcPosts' \
             --header "Authorization: Bearer $ACCESS_TOKEN" \
@@ -87,4 +85,4 @@ jobs:
       - name: Show post link
         if: ${{ success() }}
         run: |
-          echo "LinkedIn post: https://www.linkedin.com/posts/$(echo ${{ steps.post_to_linkedin.outputs.post_url }} | sed 's/urn:li:activity://')"t
+          echo "LinkedIn post: https://www.linkedin.com/posts/$(echo ${{ steps.post_to_linkedin.outputs.post_url }} | sed 's/urn:li:activity://')"
