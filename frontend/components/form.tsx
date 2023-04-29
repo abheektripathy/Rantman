@@ -17,6 +17,7 @@ function SwapForm() {
       title: noteTitle,
     };
     //yahan check daaliyo ki notebody empty toh nahi,
+    //idhar bhi i see issue.
     if (noteBody) {
       try {
         const response = await fetch(`http://0.0.0.0:8000/api/notes/create/`, {

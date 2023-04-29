@@ -1,0 +1,53 @@
+name: LinkedIn Release Notification
+
+on:
+  push:
+    branches:
+      - LinkedInrelease
+  release:
+    types: [released]
+
+jobs:
+  post_to_linkedin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get access token
+        id: access_token
+        run: |
+          ACCESS_TOKEN=$(curl --silent --request POST \
+            --header "Content-Type: application/x-www-form-urlencoded" \
+            --data-urlencode "grant_type=client_credentials" \
+            --data-urlencode "client_id=${{ secrets.LINKEDIN_CLIENT_ID }}" \
+            --data-urlencode "client_secret=${{ secrets.LINKEDIN_CLIENT_SECRET }}" \
+            https://www.linkedin.com/oauth/v2/accessToken | jq -r '.access_token')
+          echo "::set-output name=access_token::$ACCESS_TOKEN"
+
+      - name: Post to LinkedIn
+        run: |
+          CHANGELOG_URL="https://github.com/intelowlproject/IntelOwl/blob/develop/.github/CHANGELOG.md"
+          MESSAGE="published #IntelOwl ${{github.ref}}!\nfull changelog here: ${CHANGELOG_URL}\n#ThreatIntelligence #CyberSecurity #OpenSource #osint #dfir Certego"
+
+          curl --silent --request POST \
+            --header "Authorization: Bearer ${{ steps.access_token.outputs.access_token }}" \
+            --header "X-Restli-Protocol-Version: 2.0.0" \
+            --header "Content-Type: application/json" \
+            --data-raw '{
+              "author": "urn:li:person:${{ secrets.LINKEDIN_PROFILE_ID }}",
+              "lifecycleState": "PUBLISHED",
+              "specificContent": {
+                "com.linkedin.ugc.ShareContent": {
+                  "shareCommentary": {
+                    "text": "'"${MESSAGE}"'"
+                  },
+                  "shareMediaCategory": "NONE"
+                }
+              },
+              "visibility": {
+                "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+              }
+            }' \
+            https://api.linkedin.com/v2/ugcPosts

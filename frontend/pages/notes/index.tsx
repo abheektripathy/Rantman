@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 export default function NotesPage() {
   const [mockData, setMockData] = useState<any[]>([]);
+  const [searchData, setSearchData] = useState<any[]>([]);
   const [error404, setError404] = useState<boolean>(false)
 
   async function getMockData(): Promise<[]> {
@@ -18,6 +19,20 @@ export default function NotesPage() {
       return [];
     }
   }
+
+  async function searchNotes(query: string): Promise<[]> {
+    try {
+      const response = await fetch(`http://0.0.0.0:8000/api/notes/?query=${query}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error:", error);
+      setError404(true);
+      return [];
+    }
+  }
+
+  //i need to create a search bar which on enter would get uska input and pas it into as query and call search func.p
 
   useEffect(() => {
     async function fetch() {
