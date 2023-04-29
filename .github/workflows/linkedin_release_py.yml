@@ -28,6 +28,8 @@ jobs:
       - name: Get access token
         id: get_access_token
         run: |
+          echo "Client ID: $CLIENT_ID"
+          echo "Client Secret: $CLIENT_SECRET"
           response=$(curl --request POST --url 'https://www.linkedin.com/oauth/v2/accessToken' \
             --header 'Content-Type: application/x-www-form-urlencoded' \
             --data-urlencode 'grant_type=client_credentials' \
