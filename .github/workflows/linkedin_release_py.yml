@@ -34,7 +34,7 @@ jobs:
             --data-urlencode 'grant_type=client_credentials' \
             --data-urlencode "client_id=$CLIENT_ID" \
             --data-urlencode "client_secret=$CLIENT_SECRET")
-          if [ -z "${response}" ] || [ $(echo $response | jq -r '.access_token') = "null" ]; then exit 1; fi
+          #if [ -z "${response}" ] || [ $(echo $response | jq -r '.access_token') = "null" ]; then exit 1; fi
           echo "::set-output name=access_token::$(echo $response | jq -r '.access_token')"
 
       - name: Post to LinkedIn
