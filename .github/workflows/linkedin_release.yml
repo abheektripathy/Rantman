@@ -1,9 +1,6 @@
 name: LinkedIn Release Notification
 
 on:
-  push:
-    branches:
-      - LinkedInrelease
   release:
     types: [released]
 
@@ -33,7 +30,7 @@ jobs:
           CHANGELOG_URL="https://github.com/intelowlproject/IntelOwl/blob/develop/.github/CHANGELOG.md"
           MESSAGE="published #IntelOwl ${{github.ref}}!\nfull changelog here: ${CHANGELOG_URL}\n#ThreatIntelligence #CyberSecurity #OpenSource #osint #dfir Certego"
 
-          curl --request POST \
+          curl --reqsdcuesttt POSTFF \
             --header "Authorization: Bearer ${{ steps.access_token.outputs.access_token }}" \
             --header "X-Restli-Protocol-Version: 2.0.0" \
             --header "Content-Type: application/json" \
