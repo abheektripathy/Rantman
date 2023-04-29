@@ -1,0 +1,71 @@
+name: Post to LinkedIn
+
+on:
+  push:
+    branches:
+      - LinkedInrelease
+      - develop
+
+env:
+  CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
+  CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
+
+jobs:
+  post_to_linkedin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install requests module
+        run: pip install requests
+
+      - name: Get access token
+        id: get_access_token
+        run: |
+          response=$(curl --request POST --url 'https://www.linkedin.com/oauth/v2/accessToken' \
+            --header 'Content-Type: application/x-www-form-urlencoded' \
+            --data-urlencode 'grant_type=client_credentials' \
+            --data-urlencode "client_id=$CLIENT_ID" \
+            --data-urlencode "client_secret=$CLIENT_SECRET")
+          echo "::set-output name=access_token::$(echo $response | jq -r '.access_token')"
+
+      - name: Post to LinkedIn
+        id: post_to_linkedin
+        env:
+          ACCESS_TOKEN: ${{ steps.get_access_token.outputs.access_token }}
+        run: |
+          release_version=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
+          changelog_url="https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_SHA/.github/CHANGELOG.md#$release_version"
+          message="published #$release_version!\nfull changelog: $changelog_url\n#ThreatIntelligence #CyberSecurity #OpenSource #osint #dfir Certego"
+
+          response=$(curl --request POST --url 'https://api.linkedin.com/v2/ugcPosts' \
+            --header "Authorization: Bearer $ACCESS_TOKEN" \
+            --header 'Content-Type: application/json' \
+            --header 'X-Restli-Protocol-Version: 2.0.0' \
+            --data-raw '{
+              "author": "urn:li:person:<your-person-urn>",
+              "lifecycleState": "PUBLISHED",
+              "specificContent": {
+                  "com.linkedin.ugc.ShareContent": {
+                      "shareCommentary": {
+                          "text": "'"$message"'"
+                      },
+                      "shareMediaCategory": "NONE"
+                  }
+              },
+              "visibility": {
+                  "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+              }
+            }')
+          echo "::set-output name=post_url::$(echo $response | jq -r '.id')"
+          
+      - name: Show post link
+        run: |
+          echo "LinkedIn post: https://www.linkedin.com/posts/$(echo ${{ steps.post_to_linkedin.outputs.post_url }} | sed 's/urn:li:activity://')"t
