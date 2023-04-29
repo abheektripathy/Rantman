@@ -3,7 +3,6 @@ name: publish-to-LinkedIn
 on:
   push:
     branches:
-      - LinkedInrelease
       - develop
 
 env:
