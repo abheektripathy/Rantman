@@ -11,6 +11,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker-compose build 
+    - uses: actions/checkout@v2
+    - name: Build and tag the Docker images
+      run: |
+        docker-compose build
+        docker tag <backend-image-id> abheektripathy/backend:latest
+        docker tag <frontend-image-id> abheektripathy/frontend:latest
+        docker tag postgres:latest abheektripathy/postgres:latest
+
+    - name: Push the Docker images to Docker Hub
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: |
+          abheektripathy/backend:latest
+          abheektripathy/frontend:latest
+          abheektripathy/postgres:latest
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    - name: Update README with Docker image links
+      run: |
+        echo "Backend Docker image: your-dockerhub-username/backend:latest" >> README.md
+        echo "Frontend Docker image: your-dockerhub-username/frontend:latest" >> README.md
+        echo "Postgres Docker image: your-dockerhub-username/postgres:latest" >> README.md
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "Update README with latest Docker images" -a
+        git push
+
