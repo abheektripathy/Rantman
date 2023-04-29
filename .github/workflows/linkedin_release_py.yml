@@ -33,9 +33,18 @@ jobs:
             --header 'Content-Type: application/x-www-form-urlencoded' \
             --data-urlencode 'grant_type=client_credentials' \
             --data-urlencode "client_id=$CLIENT_ID" \
-            --data-urlencode "client_secret=$CLIENT_SECRET")
-          #if [ -z "${response}" ] || [ $(echo $response | jq -r '.access_token') = "null" ]; then exit 1; fi
-          echo "::set-output name=access_token::$(echo $response | jq -r '.access_token')"
+            --data-urlencode "client_secret=$CLIENT_SECRET" \
+            -w "%{http_code} %{response_code}\n")
+          http_status=$(echo "$response" | awk '{print $1}')
+          response_code=$(echo "$response" | awk '{print $2}')
+          if [[ "$http_status" -ge 200 && "$http_status" -lt 300 && "$response_code" -eq 0 ]]; then
+            echo "::set-output name=access_token::$(echo $response | jq -r '.access_token')"
+          else
+            echo "Failed to generate access token:"
+            echo "$response" | awk 'NF{print}'
+            exit 1
+          fi
+
 
       - name: Post to LinkedIn
         id: post_to_linkedin
@@ -46,7 +55,7 @@ jobs:
           changelog_url="https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_SHA/.github/CHANGELOG.md#$release_version"
           message="published #$release_version!\nfull changelog: $changelog_url\n#ThreatIntelligence #CyberSecurity #OpenSource #osint #dfir Certego"
 
-          response=$(curl --request POST --url 'https://api.linkedin.com/v2/ugcPosts' \
+          response=$(curl -i --request POST --url 'https://api.linkedin.com/v2/ugcPosts' \
             --header "Authorization: Bearer $ACCESS_TOKEN" \
             --header 'Content-Type: application/json' \
             --header 'X-Restli-Protocol-Version: 2.0.0' \
@@ -65,8 +74,15 @@ jobs:
                   "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
               }
             }')
-          if [ -z "${response}" ] || [ $(echo $response | jq -r '.id') = "null" ]; then exit 1; fi
-          echo "::set-output name=post_url::$(echo $response | jq -r '.id')"
+          status=$(echo "$response" | awk '/^HTTP/{print $2}')
+          if [ "$status" != "200" ] && [ "$status" != "201" ]; then
+            echo "Post to LinkedIn failed with status $status:"
+            echo "$response"
+            exit 1
+          fi
+          post_url=$(echo "$response" | grep '^Location:' | sed 's/^Location: //')
+          echo "::set-output name=post_url::$(echo "$post_url" | tr -d '\r\n')"
+
           
       - name: Show post link
         if: ${{ success() }}
