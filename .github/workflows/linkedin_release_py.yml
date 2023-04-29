@@ -34,16 +34,13 @@ jobs:
             --data-urlencode 'grant_type=client_credentials' \
             --data-urlencode "client_id=$CLIENT_ID" \
             --data-urlencode "client_secret=$CLIENT_SECRET" \
-            -w "%{http_code} %{response_code}\n")
-          http_status=$(echo "$response" | awk '{print $1}')
-          response_code=$(echo "$response" | awk '{print $2}')
-          if [[ "$http_status" -ge 200 && "$http_status" -lt 300 && "$response_code" -eq 0 ]]; then
-            echo "::set-output name=access_token::$(echo $response | jq -r '.access_token')"
-          else
-            echo "Failed to generate access token:"
-            echo "$response" | awk 'NF{print}'
-            exit 1
-          fi
+            -w "%{http_code}\n")
+            if echo "$response" | grep -qE '^2[0-9]{2}$'; then
+              echo "::set-output name=access_token::$(echo $response | jq -r '.access_token')"
+            else
+              echo "Failed to generate access token: $response"
+              exit 1
+            fi
 
 
       - name: Post to LinkedIn
@@ -73,14 +70,13 @@ jobs:
               }
             }')
           status=$(echo "$response" | awk '/^HTTP/{print $2}')
-          if [ "$status" != "200" ] && [ "$status" != "201" ]; then
-            echo "Post to LinkedIn failed with status $status:"
-            echo "$response"
-            exit 1
-          fi
-          post_url=$(echo "$response" | grep '^Location:' | sed 's/^Location: //')
-          echo "::set-output name=post_url::$(echo "$post_url" | tr -d '\r\n')"
-
+            if [[ "$status" =~ ^[45][0-9]{2}$ ]]; then
+              echo "Post to LinkedIn failed with status $status:"
+              echo "$response"
+              exit 1
+            fi
+            post_url=$(echo "$response" | grep '^Location:' | sed 's/^Location: //')
+            echo "::set-output name=post_url::$(echo "$post_url" | tr -d '\r\n')"
           
       - name: Show post link
         if: ${{ success() }}
