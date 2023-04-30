@@ -28,20 +28,18 @@ jobs:
       - name: Get access token
         id: get_access_token
         run: |
-          import requests
-          import json
-
-          response = requests.post('https://www.linkedin.com/oauth/v2/accessToken',
-                                   headers={'Content-Type': 'application/x-www-form-urlencoded'},
-                                   data={
-                                     'grant_type': 'client_credentials',
-                                     'client_id': '${{ secrets.LINKEDIN_CLIENT_ID }}',
-                                     'client_secret': '${{ secrets.LINKEDIN_CLIENT_SECRET }}'
-                                   })
-          
-          if response.status_code == 200:
-            access_token = response.json()['access_token']
-            print(f"::set-output name=access_token::{access_token}")
-          else:
-            print(f"Failed to generate access token: {response.content}")
-            exit(1)
+          echo "Client ID: $CLIENT_ID"
+          echo "Client Secret: $CLIENT_SECRET"
+          response=$(curl --request POST --url 'https://www.linkedin.com/oauth/v2/accessToken' \
+            --header 'Content-Type: application/x-www-form-urlencoded' \
+            --data-urlencode 'grant_type=client_credentials' \
+            --data-urlencode "client_id=$CLIENT_ID" \
+            --data-urlencode "client_secret=$CLIENT_SECRET" \
+            -w "%{http_code}\n")
+            if echo "$response" | grep -qE '^2[0-9]{2}$'; then
+              echo "::set-output name=access_token::$(echo $response | jq -r '.access_token')"
+              echo "workss"
+            else
+              echo "Failed to generate access token: $response"
+              exit 1
+            fi
